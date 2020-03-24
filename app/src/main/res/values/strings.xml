@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ToDo List Project 2</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="ItemListDialogTitle">New Item</string>
+    <string name="okString">Ok</string>
+    <string name="cancelString">Cancel</string>
 </resources>

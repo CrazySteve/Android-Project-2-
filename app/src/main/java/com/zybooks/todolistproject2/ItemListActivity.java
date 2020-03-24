@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -29,13 +30,14 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ItemListActivity extends AppCompatActivity {
+public class ItemListActivity extends AppCompatActivity implements ItemListTextDialogFragment.ItemDialogListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+    private ItemListTextDialogFragment textDialogFragment = new ItemListTextDialogFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,8 @@ public class ItemListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                openItemDialog();
             }
         });
 
@@ -63,13 +65,38 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+       FindAndSetupRecyclerView();
+    }
+
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+    }
+
+    private void FindAndSetupRecyclerView(){
+
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+    @Override
+    public void listenText(String newItemText) {
+
+        DummyContent.DummyItem newItem = new DummyContent.DummyItem( Integer.toString(DummyContent.ITEMS.size() + 1), newItemText, makeDetails(DummyContent.ITEMS.size() + 1));
+
+        DummyContent.ITEMS.add(newItem);
+        DummyContent.ITEM_MAP.put(newItem.id, newItem);
+
+        textDialogFragment.dismiss();
+    }
+
+    private static String makeDetails(int position) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Details about Item: ").append(position);
+        for (int i = 0; i < position; i++) {
+            builder.append("\nMore details information here.");
+        }
+        return builder.toString();
     }
 
     public static class SimpleItemRecyclerViewAdapter
@@ -140,4 +167,14 @@ public class ItemListActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void openItemDialog(){
+
+
+        textDialogFragment.show(getSupportFragmentManager(), "New Item Dialog");
+
+
+    }
+
+
 }
