@@ -2,10 +2,12 @@ package com.zybooks.todolistproject2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -13,13 +15,18 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zybooks.todolistproject2.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +45,10 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
      */
     private boolean mTwoPane;
     private ItemListTextDialogFragment textDialogFragment = new ItemListTextDialogFragment();
+    private String TAG = "GESTURELISTENER: ";
+
+    private ArrayList<GestureDetectorCompat> mDetectorList;
+    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +58,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +151,9 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_list_content, parent, false);
+
+
+
             return new ViewHolder(view);
         }
 
@@ -149,6 +164,105 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
+
+
+            /*holder.itemView.setOnTouchListener(new GestureDetector.OnGestureListener() {
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return false;
+                }
+
+                @Override
+                public void onShowPress(MotionEvent e) {
+
+                }
+
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return false;
+                }
+
+                @Override
+                public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                    return false;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+
+                }
+
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                    return false;
+                }
+            });
+
+                class GestureListener implements GestureDetector.OnGestureListener{
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        Log.d(TAG, "onDown");
+                        return true;
+                    }
+
+                    @Override
+                    public void onShowPress(MotionEvent e) {
+                        Log.d(TAG, "onShowPress");
+                    }
+
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        Log.d(TAG, "onSingleTapUp");
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+                        Log.d(TAG, "onScroll");
+                        return false;
+                    }
+
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        Log.d(TAG, "onLongPress");
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                        Log.d(TAG, "onFling");
+                        View view;
+
+                        e1.getX();
+                        e1.getY();
+
+                        float masterX = e1.getX();
+                        float masterY = e1.getY();
+
+                        for(int i = 0; i < DummyContent.ITEMS.size(); ++i){
+
+                            String tempStringId = Integer.toString(i);
+                            int currentID = getResources().getIdentifier(tempStringId, "id",getPackageName());
+
+                            view = (View)findViewById(currentID);
+
+                            if(view.getX() + view.getWidth() < masterX && view.getY() + view.getHeight() < masterY ){
+
+                                DummyContent.ITEM_MAP.remove(DummyContent.ITEMS.get(i));
+                                DummyContent.ITEMS.remove(i);
+
+                            }
+                        }
+
+
+
+                        return true;
+                    }
+                }
+
+
+
+            });*/
         }
 
         @Override
@@ -167,13 +281,20 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             }
         }
     }
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+
+    }
+
+
+
+
 
     private void openItemDialog(){
 
-
         textDialogFragment.show(getSupportFragmentManager(), "New Item Dialog");
-
-
     }
 
 

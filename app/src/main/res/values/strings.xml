@@ -4,4 +4,12 @@
     <string name="ItemListDialogTitle">New Item</string>
     <string name="okString">Ok</string>
     <string name="cancelString">Cancel</string>
+
+    <string name="FlingEvent">FLING</string>
+    <string name="DTapEvent">DOUBLETAP</string>
+    <string name="DragEvent">DRAG</string>
+    <string name="TapUpEvent">SINGLETAPUP</string>
+    <string name="ScrollEvent">SCROLL</string>
+    <string name="LongPressEvent">LONGPRESS</string>
+    <string name="DownEvent">ONDOWN</string>
 </resources>
