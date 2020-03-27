@@ -1,0 +1,20 @@
+<!-- res/menu/appbar_menu.xml -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_add"
+        android:title="@string/action_add"
+        android:icon="@drawable/add_circle"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_delete"
+        android:title="@string/action_delete"
+        android:icon="@drawable/remove_circle"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_about"
+        android:title="@string/action_about"
+        app:showAsAction="never"/>
+
+</menu>

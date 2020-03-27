@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,14 +79,46 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             mTwoPane = true;
         }
 
-       FindAndSetupRecyclerView();
+        FindAndSetupRecyclerView();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.appbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_add:
+                openItemDialog();
+                return true;
+
+            case R.id.action_delete:
+                //activate a delete mode that deletes dummycontent.items and dummy content.itemmap
+                return true;
+
+            case R.id.action_about:
+                //make about Fragment
+                return true;
+
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+
+    }
+
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
     }
 
-    private void FindAndSetupRecyclerView(){
+    private void FindAndSetupRecyclerView() {
 
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
@@ -94,7 +128,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
     @Override
     public void listenText(String newItemText) {
 
-        DummyContent.DummyItem newItem = new DummyContent.DummyItem( Integer.toString(DummyContent.ITEMS.size() + 1), newItemText, makeDetails(DummyContent.ITEMS.size() + 1));
+        DummyContent.DummyItem newItem = new DummyContent.DummyItem(Integer.toString(DummyContent.ITEMS.size() + 1), newItemText, makeDetails(DummyContent.ITEMS.size() + 1));
 
         DummyContent.ITEMS.add(newItem);
         DummyContent.ITEM_MAP.put(newItem.id, newItem);
@@ -151,7 +185,6 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_list_content, parent, false);
-
 
 
             return new ViewHolder(view);
@@ -280,17 +313,15 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
         }
+
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
         mDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
 
     }
-
-
-
-
 
     private void openItemDialog(){
 
@@ -299,3 +330,4 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
 
 }
+
