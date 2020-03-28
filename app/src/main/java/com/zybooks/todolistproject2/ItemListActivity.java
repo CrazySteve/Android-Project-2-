@@ -51,6 +51,24 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
     private ArrayList<GestureDetectorCompat> mDetectorList;
     private GestureDetectorCompat mDetector;
+    private GestureDetector anotherDetector;
+    private int currentItemPosition;
+
+
+
+    private class DeleteMode{
+        private boolean deleteMode = false;
+
+        public boolean isActive(){
+            return deleteMode;
+        }
+
+        public void changeMode(){
+            deleteMode = deleteMode ? false : true;
+        }
+    }
+
+    private DeleteMode deleteMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +79,8 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        mDetector = new GestureDetectorCompat(this, new GestureListener());
+        deleteMode = new DeleteMode();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +90,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
                 openItemDialog();
             }
         });
+
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -99,6 +120,8 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
             case R.id.action_delete:
                 //activate a delete mode that deletes dummycontent.items and dummy content.itemmap
+                deleteMode.changeMode();
+                Snackbar.make(findViewById(R.id.item_list), (CharSequence)"Delete Mode: " + Boolean.toString(deleteMode.isActive()) , Snackbar.LENGTH_SHORT ).show();
                 return true;
 
             case R.id.action_about:
@@ -145,12 +168,13 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
         return builder.toString();
     }
 
-    public static class SimpleItemRecyclerViewAdapter
+    public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final ItemListActivity mParentActivity;
         private final List<DummyContent.DummyItem> mValues;
         private final boolean mTwoPane;
+        private Tag currentTag;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,12 +197,16 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             }
         };
 
+
+
         SimpleItemRecyclerViewAdapter(ItemListActivity parent,
                                       List<DummyContent.DummyItem> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+
+
         }
 
         @Override
@@ -186,116 +214,29 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_list_content, parent, false);
 
-
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mIdView.setText(mValues.get(position).id);
             holder.mContentView.setText(mValues.get(position).content);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
-
-
-            /*holder.itemView.setOnTouchListener(new GestureDetector.OnGestureListener() {
-                @Override
-                public boolean onDown(MotionEvent e) {
-                    return false;
-                }
+            holder.itemView.setOnTouchListener( new View.OnTouchListener(){
 
                 @Override
-                public void onShowPress(MotionEvent e) {
+                public boolean onTouch(View v, MotionEvent event) {
 
-                }
 
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return false;
-                }
-
-                @Override
-                public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                    return false;
-                }
-
-                @Override
-                public void onLongPress(MotionEvent e) {
-
-                }
-
-                @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                    return false;
+                    Log.d(TAG, Integer.toString(position));
+                    currentItemPosition = position;
+                    mDetector.onTouchEvent(event);
+                    return ItemListActivity.super.onTouchEvent(event);
                 }
             });
 
-                class GestureListener implements GestureDetector.OnGestureListener{
-
-                    @Override
-                    public boolean onDown(MotionEvent e) {
-                        Log.d(TAG, "onDown");
-                        return true;
-                    }
-
-                    @Override
-                    public void onShowPress(MotionEvent e) {
-                        Log.d(TAG, "onShowPress");
-                    }
-
-                    @Override
-                    public boolean onSingleTapUp(MotionEvent e) {
-                        Log.d(TAG, "onSingleTapUp");
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                        Log.d(TAG, "onScroll");
-                        return false;
-                    }
-
-                    @Override
-                    public void onLongPress(MotionEvent e) {
-                        Log.d(TAG, "onLongPress");
-                    }
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                        Log.d(TAG, "onFling");
-                        View view;
-
-                        e1.getX();
-                        e1.getY();
-
-                        float masterX = e1.getX();
-                        float masterY = e1.getY();
-
-                        for(int i = 0; i < DummyContent.ITEMS.size(); ++i){
-
-                            String tempStringId = Integer.toString(i);
-                            int currentID = getResources().getIdentifier(tempStringId, "id",getPackageName());
-
-                            view = (View)findViewById(currentID);
-
-                            if(view.getX() + view.getWidth() < masterX && view.getY() + view.getHeight() < masterY ){
-
-                                DummyContent.ITEM_MAP.remove(DummyContent.ITEMS.get(i));
-                                DummyContent.ITEMS.remove(i);
-
-                            }
-                        }
-
-
-
-                        return true;
-                    }
-                }
-
-
-
-            });*/
         }
 
         @Override
@@ -316,11 +257,80 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
     }
 
+    class GestureListener implements GestureDetector.OnGestureListener{
+
+
+        public boolean TouchEvent(MotionEvent event, int position){
+
+
+
+            return true;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Log.d(TAG, "onDown");
+            return true;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+            Log.d(TAG, "onShowPress");
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.d(TAG, "onSingleTapUp");
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            Log.d(TAG, "onScroll");
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.d(TAG, "onLongPress");
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            Log.d(TAG, "onFling");
+            View view;
+
+            float masterX = e1.getX();
+            float masterY = e1.getY();
+
+
+
+            /*for(int i = 0; i < DummyContent.ITEMS.size(); ++i){
+
+                String tempStringId = Integer.toString(i);
+                int currentID = getResources().getIdentifier(tempStringId, "array", getPackageName());
+
+                view = (View)findViewById(R.id.item_list);*/
+
+                if(deleteMode.isActive()){
+
+                    DummyContent.ITEM_MAP.remove(currentItemPosition);
+                    DummyContent.ITEMS.remove(currentItemPosition);
+
+                    FindAndSetupRecyclerView();
+                }
+
+
+
+
+            return true;
+        }
+
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        mDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
-
     }
 
     private void openItemDialog(){
