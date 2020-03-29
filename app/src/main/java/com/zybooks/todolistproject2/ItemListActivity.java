@@ -121,7 +121,8 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             case R.id.action_delete:
                 //activate a delete mode that deletes dummycontent.items and dummy content.itemmap
                 deleteMode.changeMode();
-                Snackbar.make(findViewById(R.id.item_list), (CharSequence)"Delete Mode: " + Boolean.toString(deleteMode.isActive()) , Snackbar.LENGTH_SHORT ).show();
+                String currentModeString = deleteMode.isActive() ? "Activated" : "Deactivated";
+                Snackbar.make(findViewById(R.id.item_list), (CharSequence)"Delete Mode: " + currentModeString , Snackbar.LENGTH_SHORT ).show();
                 return true;
 
             case R.id.action_about:
@@ -317,11 +318,9 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
                     DummyContent.ITEM_MAP.remove(currentItemPosition);
                     DummyContent.ITEMS.remove(currentItemPosition);
 
+                    reorganizeItems();
                     FindAndSetupRecyclerView();
                 }
-
-
-
 
             return true;
         }
@@ -336,6 +335,18 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
     private void openItemDialog(){
 
         textDialogFragment.show(getSupportFragmentManager(), "New Item Dialog");
+    }
+
+    private void reorganizeItems(){
+
+        for(int i = 0; i < DummyContent.ITEMS.size(); ++i) {
+            DummyContent.DummyItem currentItem = DummyContent.ITEMS.get(i);
+            currentItem.id = Integer.toString(i+1);
+
+            DummyContent.ITEMS.add(i, currentItem);
+            DummyContent.ITEMS.remove(i+1);
+            DummyContent.ITEM_MAP.put(currentItem.id, currentItem);
+        }
     }
 
 
