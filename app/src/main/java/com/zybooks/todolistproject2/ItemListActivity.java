@@ -41,6 +41,7 @@ import java.util.List;
  */
 public class ItemListActivity extends AppCompatActivity implements ItemListTextDialogFragment.ItemDialogListener {
 
+
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -48,16 +49,15 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
     private boolean mTwoPane;
     private ItemListTextDialogFragment textDialogFragment = new ItemListTextDialogFragment();
     private AboutDialogFragment aboutDialogFragment = new AboutDialogFragment();
+    private DeleteConfirmationDialogFragment deleteConfirmationDialogFragment = new DeleteConfirmationDialogFragment();
     private String TAG = "GESTURELISTENER: ";
 
     private ArrayList<GestureDetectorCompat> mDetectorList;
     private GestureDetectorCompat mDetector;
     private GestureDetector anotherDetector;
-    private int currentItemPosition;
+    public int currentItemPosition;
 
-
-
-    private class DeleteMode{
+    public class DeleteMode{
         private boolean deleteMode = false;
 
         public boolean isActive(){
@@ -69,7 +69,28 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
         }
     }
 
-    private DeleteMode deleteMode;
+    public class DeleteConfirmation{
+        private boolean didConfirm = false;
+
+        public boolean isActive(){ return didConfirm;}
+
+        public void confirm(){
+
+            if(deleteMode.isActive()){
+
+                DummyContent.ITEM_MAP.remove(currentItemPosition);
+                DummyContent.ITEMS.remove(currentItemPosition);
+
+                reorganizeItems();
+                FindAndSetupRecyclerView();
+            }
+
+        }
+
+    }
+
+    public DeleteMode deleteMode;
+    public static DeleteConfirmation deleteConfirmation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +103,16 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
         mDetector = new GestureDetectorCompat(this, new GestureListener());
         deleteMode = new DeleteMode();
+        deleteConfirmation = new DeleteConfirmation();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                openItemDialog();
+                if(deleteMode.isActive() == false) {
+                    openItemDialog();
+                }
             }
         });
 
@@ -181,7 +205,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             @Override
             public void onClick(View view) {
                 DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-                if (mTwoPane) {
+                if (mTwoPane && deleteMode.isActive() == false) {
                     Bundle arguments = new Bundle();
                     arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
                     ItemDetailFragment fragment = new ItemDetailFragment();
@@ -189,7 +213,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
                     mParentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.item_detail_container, fragment)
                             .commit();
-                } else {
+                } else if(deleteMode.isActive() == false) {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
@@ -305,23 +329,10 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             float masterX = e1.getX();
             float masterY = e1.getY();
 
+            if(deleteMode.isActive()) {
+                openDeleteConfirmationDialog();
+            }
 
-
-            /*for(int i = 0; i < DummyContent.ITEMS.size(); ++i){
-
-                String tempStringId = Integer.toString(i);
-                int currentID = getResources().getIdentifier(tempStringId, "array", getPackageName());
-
-                view = (View)findViewById(R.id.item_list);*/
-
-                if(deleteMode.isActive()){
-
-                    DummyContent.ITEM_MAP.remove(currentItemPosition);
-                    DummyContent.ITEMS.remove(currentItemPosition);
-
-                    reorganizeItems();
-                    FindAndSetupRecyclerView();
-                }
 
             return true;
         }
@@ -341,6 +352,12 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
     private void openAboutDialog(){
 
         aboutDialogFragment.show(getSupportFragmentManager(), "About Dialog");
+    }
+
+    private void openDeleteConfirmationDialog(){
+
+        deleteConfirmationDialogFragment.show(getSupportFragmentManager(), "Delete Confirmation Dialog");
+
     }
 
     private void reorganizeItems(){
