@@ -47,6 +47,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
      */
     private boolean mTwoPane;
     private ItemListTextDialogFragment textDialogFragment = new ItemListTextDialogFragment();
+    private AboutDialogFragment aboutDialogFragment = new AboutDialogFragment();
     private String TAG = "GESTURELISTENER: ";
 
     private ArrayList<GestureDetectorCompat> mDetectorList;
@@ -126,7 +127,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
                 return true;
 
             case R.id.action_about:
-                //make about Fragment
+                openAboutDialog();
                 return true;
 
 
@@ -335,6 +336,11 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
     private void openItemDialog(){
 
         textDialogFragment.show(getSupportFragmentManager(), "New Item Dialog");
+    }
+
+    private void openAboutDialog(){
+
+        aboutDialogFragment.show(getSupportFragmentManager(), "About Dialog");
     }
 
     private void reorganizeItems(){

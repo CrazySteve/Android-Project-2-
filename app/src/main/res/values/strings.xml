@@ -16,4 +16,9 @@
     <string name="ScrollEvent">SCROLL</string>
     <string name="LongPressEvent">LONGPRESS</string>
     <string name="DownEvent">ONDOWN</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="about_dialog_title">About</string>
+    <string name="about_dialog_info">Make a list of items with further details!</string>
+    <string name="about_dialog_programmer_names">By: Sam Dillin and Steve Stewart</string>
 </resources>
