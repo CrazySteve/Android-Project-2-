@@ -62,9 +62,7 @@ public class ItemListTextDialogFragment extends DialogFragment {
             throw new ClassCastException(context.toString() +
                     "must implement ItemDialogListener");
         }
-
     }
-
 
     public interface ItemDialogListener{
         void listenText(String newItemText);
