@@ -20,7 +20,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="about_dialog_title">About</string>
-    <string name="about_dialog_info">Make a list of items with further details!</string>
+    <string name="about_dialog_info">Make a list of items with further details! Use + to add new items and - to toggle delete mode. Make changes in details and press the save icon to keep them.</string>
     <string name="about_dialog_programmer_names">By: Sam Dillin and Steve Stewart</string>
 
     <!-- TODO: Remove or change this placeholder text -->

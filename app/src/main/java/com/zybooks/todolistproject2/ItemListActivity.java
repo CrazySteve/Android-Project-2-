@@ -3,6 +3,7 @@ package com.zybooks.todolistproject2;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -66,6 +67,11 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
         public void changeMode(){
             deleteMode = deleteMode ? false : true;
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                View recyclerView = findViewById(R.id.item_list);
+                recyclerView.setNestedScrollingEnabled(!deleteMode);
+            }
         }
     }
 
