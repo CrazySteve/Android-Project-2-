@@ -39,6 +39,4 @@
         app:srcCompat="@drawable/save" />
 
 
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
