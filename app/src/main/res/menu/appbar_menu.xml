@@ -10,7 +10,7 @@
 
     <item android:id="@+id/action_delete"
         android:title="@string/action_delete"
-        android:icon="@drawable/remove_circle_2"
+        android:icon="@drawable/remove_circle_3"
         app:showAsAction="ifRoom"/>
 
     <!-- This shouldn't be necessary with the floating action button
