@@ -13,10 +13,12 @@
         android:icon="@drawable/remove_circle_2"
         app:showAsAction="ifRoom"/>
 
+    <!-- This shouldn't be necessary with the floating action button
     <item android:id="@+id/action_edit"
         android:title="@string/action_edit"
         android:icon="@drawable/edit_pencil"
         app:showAsAction="ifRoom"/>
+    -->
 
     <item android:id="@+id/action_about"
         android:title="@string/action_about"
