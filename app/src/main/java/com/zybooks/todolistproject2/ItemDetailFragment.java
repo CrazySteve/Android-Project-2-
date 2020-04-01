@@ -1,6 +1,8 @@
 package com.zybooks.todolistproject2;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -58,6 +60,8 @@ public class ItemDetailFragment extends Fragment {
             }
         }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

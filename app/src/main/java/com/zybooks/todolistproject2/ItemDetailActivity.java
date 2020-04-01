@@ -1,6 +1,7 @@
 package com.zybooks.todolistproject2;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,6 +18,7 @@ import androidx.core.app.NavUtils;
 
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import static com.zybooks.todolistproject2.ItemDetailFragment.ARG_ITEM_ID;
 
@@ -27,6 +29,8 @@ import static com.zybooks.todolistproject2.ItemDetailFragment.ARG_ITEM_ID;
  * in a {@link ItemListActivity}.
  */
 public class ItemDetailActivity extends AppCompatActivity {
+
+    DummyContent.DummyItem mItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //TODO make edit work here in itemDetailActviity
                 EditText currentEditText = (EditText) findViewById(R.id.item_detail);
-               DummyContent.DummyItem mItem = DummyContent.ITEMS.get(ItemListActivity.currentItemPosition);
+                mItem = DummyContent.ITEMS.get(ItemListActivity.currentItemPosition);
                mItem.details = currentEditText.getText().toString();
             }
         });
@@ -73,6 +77,19 @@ public class ItemDetailActivity extends AppCompatActivity {
                     .add(R.id.item_detail_container, fragment)
                     .commit();
         }
+    }
+
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ItemListActivity.didFlip = true;
+            setResult(RESULT_OK);
+            finish();
+        }
+
     }
 
     @Override

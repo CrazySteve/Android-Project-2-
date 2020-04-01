@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -57,6 +58,10 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
     private GestureDetectorCompat mDetector;
     private GestureDetector anotherDetector;
     static public int currentItemPosition;
+
+    public int REQUEST_CODE_ID = 0;
+
+    public static boolean didFlip;
 
     public class DeleteMode{
         private boolean deleteMode = false;
@@ -123,6 +128,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             }
         });
 
+        Intent intent = getIntent();
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -130,6 +136,8 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+
+
             fab.show();
         }
         else {
@@ -138,6 +146,23 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
 
 
         FindAndSetupRecyclerView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ItemListActivity mParentActivity = this;
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_ID) {
+
+            Bundle arguments = new Bundle();
+            arguments.putString(ItemDetailFragment.ARG_ITEM_ID, Integer.toString(currentItemPosition));
+            ItemDetailFragment fragment = new ItemDetailFragment();
+            fragment.setArguments(arguments);
+            this.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.item_detail_container, fragment)
+                    .commit();
+
+        }
     }
 
     @Override
@@ -217,6 +242,8 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             @Override
             public void onClick(View view) {
                 DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+
+
                 if (mTwoPane && deleteMode.isActive() == false) {
                     Bundle arguments = new Bundle();
                     arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
@@ -229,8 +256,9 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
-
-                    context.startActivity(intent);
+                    currentItemPosition = Integer.parseInt(item.id);
+                    //context.startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_ID);
                 }
             }
         };
