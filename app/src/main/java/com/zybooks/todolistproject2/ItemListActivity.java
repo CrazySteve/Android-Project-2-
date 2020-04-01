@@ -41,7 +41,6 @@ import java.util.List;
  */
 public class ItemListActivity extends AppCompatActivity implements ItemListTextDialogFragment.ItemDialogListener {
 
-
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
