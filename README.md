@@ -16,6 +16,8 @@ List what each teammate contributed
 					add items
 					fling gesture
 					delete items
+					save edits
+					switching rotation
 					appbar
 					about dialog
 
@@ -24,7 +26,7 @@ List what each teammate contributed
 					create custom launcher icon
 					about dialog info
 					disable scroll during delete
-					
+
 
 The percentage of work completed by each teammate
-50 - 50
+60 - 40
