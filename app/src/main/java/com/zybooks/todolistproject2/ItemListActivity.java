@@ -122,7 +122,12 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+            fab.show();
         }
+        else {
+            fab.hide();
+        }
+
 
         FindAndSetupRecyclerView();
     }
