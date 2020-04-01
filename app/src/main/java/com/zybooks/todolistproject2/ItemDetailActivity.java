@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.zybooks.todolistproject2.dummy.DummyContent;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -15,6 +16,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 
 import android.view.MenuItem;
+import android.widget.EditText;
+
+import static com.zybooks.todolistproject2.ItemDetailFragment.ARG_ITEM_ID;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -36,8 +40,9 @@ public class ItemDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO make edit work here in itemDetailActviity
-                //Get value of EditText (item detail)
-                //Set detail value of item in DummyContent
+                EditText currentEditText = (EditText) findViewById(R.id.item_detail);
+               DummyContent.DummyItem mItem = DummyContent.ITEMS.get(ItemListActivity.currentItemPosition);
+               mItem.details = currentEditText.getText().toString();
             }
         });
 
@@ -60,8 +65,8 @@ public class ItemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
+            arguments.putString(ARG_ITEM_ID,
+                    getIntent().getStringExtra(ARG_ITEM_ID));
             ItemDetailFragment fragment = new ItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

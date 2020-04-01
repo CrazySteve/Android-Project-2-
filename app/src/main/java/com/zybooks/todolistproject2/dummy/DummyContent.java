@@ -56,7 +56,7 @@ public class DummyContent {
     public static class DummyItem {
         public String id;
         public final String content;
-        public final String details;
+        public String details;
 
         public DummyItem(String id, String content, String details) {
             this.id = id;

@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.zybooks.todolistproject2.dummy.DummyContent;
@@ -54,7 +55,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
     private ArrayList<GestureDetectorCompat> mDetectorList;
     private GestureDetectorCompat mDetector;
     private GestureDetector anotherDetector;
-    public int currentItemPosition;
+    static public int currentItemPosition;
 
     public class DeleteMode{
         private boolean deleteMode = false;
@@ -109,9 +110,9 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
             @Override
             public void onClick(View view) {
 
-                if(deleteMode.isActive() == false) {
-                    openItemDialog();
-                }
+                EditText currentEditText = (EditText) findViewById(R.id.item_detail);
+                DummyContent.DummyItem mItem = DummyContent.ITEMS.get(ItemListActivity.currentItemPosition);
+                mItem.details = currentEditText.getText().toString();
             }
         });
 
