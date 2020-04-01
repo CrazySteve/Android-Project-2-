@@ -68,6 +68,7 @@ public class ItemListActivity extends AppCompatActivity implements ItemListTextD
         public void changeMode(){
             deleteMode = deleteMode ? false : true;
 
+            //Trying to disable scrolling of recyclerview to make fling easier
             if (Build.VERSION.SDK_INT >= 21) {
                 View recyclerView = findViewById(R.id.item_list);
                 recyclerView.setNestedScrollingEnabled(!deleteMode);
